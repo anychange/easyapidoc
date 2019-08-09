@@ -1,0 +1,21 @@
+{
+    "name": "anychange/easyapidoc",
+    "description": "A Library For Creating PHP API Document",
+    "type": "library",
+    "require": {
+        "php": ">=5.6"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "zjm",
+            "email": "290315317@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "easyapidoc\\": "src/"
+        }
+    }
+}

@@ -1,2 +1,2 @@
 # easyapidoc
-A Library For Creating PHP API Doc
+A Library For Creating PHP API Document
