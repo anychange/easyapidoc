@@ -1,7 +1,7 @@
 <?php
-namespace easyapidoc
+namespace EasyApiDoc;
 class Test{
 	public function SayHello(){
-		echo 'helloworld'
+		echo 'helloworld';
 	}
 }
