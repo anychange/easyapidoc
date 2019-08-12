@@ -38,7 +38,7 @@ $this->setProjectName( 'myproject');
 //Set The Logo Path Of Your Projcet
 $this->setProjectLogo('mylogo');
 //Set The Favicon Path Of Your Projcet
-$this->setProjectFavicon('__DIR__.'/favicon.ico');
+$this->setProjectFavicon(__DIR__.'/favicon.ico');
 //Set The Basic Access Url For API Testing 
 $this->setProjectApiBaseUrl('http://192.168.1.209/v1');
 //Set The ClassList That Need Exclude
