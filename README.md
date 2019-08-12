@@ -42,9 +42,9 @@ $this->setProjectFavicon(__DIR__.'/favicon.ico');
 //Set The Basic Access Url For API Testing 
 $this->setProjectApiBaseUrl('http://192.168.1.209/v1');
 //Set The ClassList That Need Exclude
-$this->setProjectExcludeClassList(array ('App\\Controllers\\BaseController'));
+$this->setProjectExcludeClassList(array ('App\Controllers\BaseController'));
 //Set The FunctionList That Need Exclude
-$this->setProjectExcludeFuncList(array ('App\\Controllers\\V1\\About\\index'));
+$this->setProjectExcludeFuncList(array ('App\Controllers\V1\About\index'));
 //Set The MenuGroup's Self Reflection
 $this->setSelfMenuGroup(array ('my'=> '我的'));
 //Set The Self Menu List Which Will Put In The Start Of The List
