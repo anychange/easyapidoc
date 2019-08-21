@@ -12,14 +12,6 @@ class EasyApiDoc {
     /**
      * @var string
      */
-    protected $projectLogo = '';
-    /**
-     * @var string
-     */
-    protected $projectFavicon = '';
-    /**
-     * @var string
-     */
     protected $projectApiBaseUrl = '';
     /**
      * @var string
@@ -78,14 +70,6 @@ class EasyApiDoc {
 
     public function setProjectName ($projectName) {
         $this->projectName = $projectName;
-    }
-
-    public function setProjectLogo ($projectLogo) {
-        $this->projectLogo = $projectLogo;
-    }
-
-    public function setProjectFavicon ($projectFavicon) {
-        $this->projectFavicon = $projectFavicon;
     }
 
     public function setProjectApiBaseUrl ($projectApiBaseUrl) {

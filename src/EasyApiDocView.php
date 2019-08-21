@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?php echo $this->projectName; ?> - Online API Document</title>
-    <link rel="icon" href="<?php echo $this->projectFavicon; ?>" type="image/x-icon"/>
+    <title><?php echo !empty($this->projectName)?$this->projectName.' - ':''; ?>Online API Document</title>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.4.1/semantic.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
@@ -15,7 +14,7 @@
 <div class="ui fixed inverted menu">
     <div class="ui container">
         <a href="javascript:;" class="header item">
-            <img class="logo" src="<?php echo $this->projectLogo; ?>" alt="">&nbsp<?php echo $this->projectName; ?>- Online API Document
+            <?php echo !empty($this->projectName)?$this->projectName.' - ':''; ?>Online API Document
         </a>
     </div>
 </div>
