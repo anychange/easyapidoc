@@ -8,11 +8,23 @@ Inspired by [PhalApi doc]( http://demo.phalapi.net/docs.php)
 
 #### Use [Composer](https://getcomposer.org/) to install the library.
 
-- 在项目中的 `composer.json` 文件中添加：  
-```
-    "anychange/easyapidoc":"dev-master"
-```
+- Add the dependency to your project:
 
+```
+bash:
+
+composer require anychange/easyapidoc:dev-master
+
+Or:
+
+{
+    "require": {
+        "anychange/easyapidoc":"dev-master"
+    }
+}
+
+```
+  
 ## Usage
 
 ### Rules：
