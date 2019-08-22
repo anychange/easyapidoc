@@ -108,22 +108,24 @@ class EasyApiDoc {
         $this->selfMenuGroup = $selfMenuGroup;
     }
 
-    public function setSelfMenuStartList ($menuGroup, $menuTitle, $methodDesc, $tableList = array ()) {
+    public function setSelfMenuStartList ($menuGroup, $menuTitle, $methodDesc, $tableTitle = '', $tableList = array ()) {
         $this->selfMenuStartList[$menuGroup]['menuGroup'] = $menuGroup;
         $this->selfMenuStartList[$menuGroup]['subList'][] = array (
             'menuTag'     => $menuTitle,
             'methodTitle' => $menuTitle,
             'methodDesc'  => nl2br ($methodDesc),
+            'tableTitle'  => $tableTitle,
             'tableList'   => $tableList,
         );
     }
 
-    public function setSelfMenuStopList ($menuGroup, $menuTitle, $methodDesc, $tableList = array ()) {
+    public function setSelfMenuStopList ($menuGroup, $menuTitle, $methodDesc, $tableTitle = '', $tableList = array ()) {
         $this->selfMenuStopList[$menuGroup]['menuGroup'] = $menuGroup;
         $this->selfMenuStopList[$menuGroup]['subList'][] = array (
             'menuTag'     => $menuTitle,
             'methodTitle' => $menuTitle,
             'methodDesc'  => nl2br ($methodDesc),
+            'tableTitle'  => $tableTitle,
             'tableList'   => $tableList,
         );
     }

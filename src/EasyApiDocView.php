@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                                 <?php if (!empty($menuInfo['tableList'])) { ?>
-                                    <h3><i class="tree icon"></i></h3>
+                                    <h3><i class="tree icon"></i><?php echo $menuInfo['tableTitle'];?></h3>
                                     <table class="ui blue celled striped table">
                                         <thead>
                                         <tr>

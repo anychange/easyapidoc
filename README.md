@@ -57,7 +57,7 @@ $this->setSelfMenuGroup(array ('my'=> 'My Account'));
 //Set The Self Menu List Which Will Put In The Start Of The List
 $doc->setSelfMenuStartList ('introduction','API Description','The Document Is For The Developer');
 //Set The Self Menu List Which Will Put In The End Of The List
-$doc->setSelfMenuStopList ('the end','API Description','Just The End Of The Document',array(array('Error Code','Error Message'),array('404','Not Fount')));
+$doc->setSelfMenuStopList ('the end','API Description','Just The End Of The Document','code instruction',array(array('Error Code','Error Message'),array('404','Not Fount')));
 $doc->setSelfMenuStopList ('the end','API Description','Just The End Of The Document');
 //basic useage
 //Set The Namespace Of The Project
