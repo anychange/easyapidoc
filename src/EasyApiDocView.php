@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title><?php echo !empty($this->projectName)?$this->projectName.' - ':''; ?>Online API Document</title>
+    <title><?php echo !empty($this->projectName) ? $this->projectName . ' - ' : ''; ?>Online API Document</title>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.bootcss.com/semantic-ui/2.4.1/semantic.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
@@ -14,7 +14,7 @@
 <div class="ui fixed inverted menu">
     <div class="ui container">
         <a href="javascript:;" class="header item">
-            <?php echo !empty($this->projectName)?$this->projectName.' - ':''; ?>Online API Document
+            <?php echo !empty($this->projectName) ? $this->projectName . ' - ' : ''; ?>Online API Document
         </a>
     </div>
 </div>
@@ -68,6 +68,28 @@
                                         <p><?php echo $menuInfo['methodDesc']; ?></p>
                                     </div>
                                 </div>
+                                <?php if (!empty($menuInfo['tableList'])) { ?>
+                                    <h3><i class="tree icon"></i></h3>
+                                    <table class="ui blue celled striped table">
+                                        <thead>
+                                        <tr>
+                                            <?php $tableHeader = array_shift ($menuInfo['tableList']); ?>
+                                            <?php foreach ($tableHeader as $v) { ?>
+                                                <th><?php echo $v ?></th>
+                                            <?php } ?>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach ($menuInfo['tableList'] as $pvalue) { ?>
+                                            <tr>
+                                                <?php foreach ($pvalue as $v) { ?>
+                                                    <td><?php echo $v; ?></td>
+                                                <?php } ?>
+                                            </tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                <?php } ?>
                                 <?php if (!empty($menuInfo['methodParams'])) { ?>
                                     <h3><i class="sign in alternate icon"></i>接口参数</h3>
                                     <table class="ui red celled striped table">
@@ -175,7 +197,7 @@
                                         </tbody>
                                     </table>
                                     <div class="ui fluid action input">
-                                        <input placeholder="请求的接口链接" type="text" name="request_url" value="<?php echo rtrim ($this->projectApiBaseUrl, '/').$menuInfo['methodPath']; ?>">
+                                        <input placeholder="请求的接口链接" type="text" name="request_url" value="<?php echo rtrim ($this->projectApiBaseUrl, '/') . $menuInfo['methodPath']; ?>">
                                         <button class="ui button green" id="submit">请求当前接口</button>
                                     </div>
                                     <div class="ui blue message" id="json_output"></div>

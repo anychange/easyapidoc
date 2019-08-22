@@ -57,6 +57,7 @@ $this->setSelfMenuGroup(array ('my'=> '我的'));
 //Set The Self Menu List Which Will Put In The Start Of The List
 $doc->setSelfMenuStartList ('introduction','API Description','The Document Is For The Developer');
 //Set The Self Menu List Which Will Put In The End Of The List
+$doc->setSelfMenuStopList ('the end','API Description','Just The End Of The Document',array(array('错误代码','错误信息'),array('404','Not Fount'));
 $doc->setSelfMenuStopList ('the end','API Description','Just The End Of The Document');
 //basic useage
 //Set The Namespace Of The Project

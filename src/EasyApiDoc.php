@@ -85,11 +85,19 @@ class EasyApiDoc {
     }
 
     public function setProjectExcludeClassList ($projectExcludeClassList) {
-        $this->projectExcludeClassList = $projectExcludeClassList;
+        if (is_array ($projectExcludeClassList)) {
+            $this->projectExcludeClassList = array_merge ($this->projectExcludeClassList, $projectExcludeClassList);
+        } else {
+            $this->projectExcludeClassList[] = $projectExcludeClassList;
+        }
     }
 
     public function setProjectExcludeFuncList ($projectExcludeFuncList) {
-        $this->projectExcludeFuncList = $projectExcludeFuncList;
+        if (is_array ($projectExcludeFuncList)) {
+            $this->projectExcludeFuncList = array_merge ($this->projectExcludeFuncList, $projectExcludeFuncList);
+        } else {
+            $this->projectExcludeFuncList[] = $projectExcludeFuncList;
+        }
     }
 
     public function setProjectIsExcludeParentClass ($projectIsExcludeParentClass) {
@@ -100,21 +108,23 @@ class EasyApiDoc {
         $this->selfMenuGroup = $selfMenuGroup;
     }
 
-    public function setSelfMenuStartList ($menuGroup, $menuTitle, $methodDesc) {
+    public function setSelfMenuStartList ($menuGroup, $menuTitle, $methodDesc, $tableList = array ()) {
         $this->selfMenuStartList[$menuGroup]['menuGroup'] = $menuGroup;
         $this->selfMenuStartList[$menuGroup]['subList'][] = array (
             'menuTag'     => $menuTitle,
             'methodTitle' => $menuTitle,
             'methodDesc'  => nl2br ($methodDesc),
+            'tableList'   => $tableList,
         );
     }
 
-    public function setSelfMenuStopList ($menuGroup, $menuTitle, $methodDesc) {
+    public function setSelfMenuStopList ($menuGroup, $menuTitle, $methodDesc, $tableList = array ()) {
         $this->selfMenuStopList[$menuGroup]['menuGroup'] = $menuGroup;
         $this->selfMenuStopList[$menuGroup]['subList'][] = array (
             'menuTag'     => $menuTitle,
             'methodTitle' => $menuTitle,
             'methodDesc'  => nl2br ($methodDesc),
+            'tableList'   => $tableList,
         );
     }
 
@@ -390,6 +400,7 @@ class EasyApiDoc {
                 $dirInfo[] = $v;
             }
         }
+
         return $dirInfo;
     }
 
