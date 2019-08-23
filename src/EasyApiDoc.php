@@ -110,7 +110,7 @@ class EasyApiDoc {
         $this->selfMenuList[$menuGroup]['subList'][] = array (
             'menuTag'     => $menuGroup.$menuTitle,
             'methodTitle' => $menuTitle,
-            'methodDesc'  => nl2br ($methodDesc),
+            'methodDesc'  => nl2br (str_replace ('\n','<br>',$methodDesc)),
             'tableTitle'  => $tableTitle,
             'tableList'   => $tableList,
         );
