@@ -108,7 +108,7 @@ class EasyApiDoc {
         $this->selfMenuList[$menuGroup]['menuGroup'] = $menuGroup;
         $this->selfMenuList[$menuGroup]['menuGroupPosition']=$menuGroupPosition;
         $this->selfMenuList[$menuGroup]['subList'][] = array (
-            'menuTag'     => $menuTitle,
+            'menuTag'     => $menuGroup.$menuTitle,
             'methodTitle' => $menuTitle,
             'methodDesc'  => nl2br ($methodDesc),
             'tableTitle'  => $tableTitle,

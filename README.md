@@ -55,7 +55,7 @@ $this->setProjectExcludeFuncList(array ('App\Controllers\V1\About\index'));
 //Set The MenuGroup's Self Reflection
 $this->setSelfMenuGroup(array ('my'=> 'My Account'));
 //Set The Self Menu List Which Will Put In The Start Of The List As Default
-$doc->setSelfMenuList ('introduction','API Description','The Document Is For The Developer');
+$doc->setSelfMenuList ('introduction','API Introduction','The Document Is For The Developer');
 //Set The Self Menu List Which Will Put In The End Of The List
 $doc->setSelfMenuList ('the end','API Description','Just The End Of The Document','code instruction',array(array('Error Code','Error Message'),array('404','Not Fount')),'stop');
 $doc->setSelfMenuStopList ('the end','API Description','Just The End Of The Document','',array(),'stop');
