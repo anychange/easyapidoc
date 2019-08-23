@@ -40,11 +40,7 @@ class EasyApiDoc {
     /**
      * @var array
      */
-    protected $selfMenuStartList = array ();
-    /**
-     * @var array
-     */
-    protected $selfMenuStopList = array ();
+    protected $selfMenuList = array ();
     /**
      * @var array
      */
@@ -108,20 +104,10 @@ class EasyApiDoc {
         $this->selfMenuGroup = $selfMenuGroup;
     }
 
-    public function setSelfMenuStartList ($menuGroup, $menuTitle, $methodDesc, $tableTitle = '', $tableList = array ()) {
-        $this->selfMenuStartList[$menuGroup]['menuGroup'] = $menuGroup;
-        $this->selfMenuStartList[$menuGroup]['subList'][] = array (
-            'menuTag'     => $menuTitle,
-            'methodTitle' => $menuTitle,
-            'methodDesc'  => nl2br ($methodDesc),
-            'tableTitle'  => $tableTitle,
-            'tableList'   => $tableList,
-        );
-    }
-
-    public function setSelfMenuStopList ($menuGroup, $menuTitle, $methodDesc, $tableTitle = '', $tableList = array ()) {
-        $this->selfMenuStopList[$menuGroup]['menuGroup'] = $menuGroup;
-        $this->selfMenuStopList[$menuGroup]['subList'][] = array (
+    public function setSelfMenuList ($menuGroup, $menuTitle, $methodDesc, $tableTitle = '', $tableList = array (),$menuGroupPosition='start') {
+        $this->selfMenuList[$menuGroup]['menuGroup'] = $menuGroup;
+        $this->selfMenuList[$menuGroup]['menuGroupPosition']=$menuGroupPosition;
+        $this->selfMenuList[$menuGroup]['subList'][] = array (
             'menuTag'     => $menuTitle,
             'methodTitle' => $menuTitle,
             'methodDesc'  => nl2br ($methodDesc),
@@ -144,9 +130,6 @@ class EasyApiDoc {
      */
     public function onlineShow () {
         $apiList = array ();
-        if (!empty($this->selfMenuStartList)) {
-            $apiList = array_merge ($apiList, $this->selfMenuStartList);
-        }
         $errorMessage = array ();
         if (empty($this->projectApiPath) || !is_dir ($this->projectApiPath)) {
             $files = array ();
@@ -374,8 +357,14 @@ class EasyApiDoc {
             }
         }
 
-        if (!empty($this->selfMenuStopList)) {
-            $apiList = array_merge ($apiList, $this->selfMenuStopList);
+        if (!empty($this->selfMenuList)) {
+            foreach ($this->selfMenuList as $gk=>$gv){
+                if($gv['menuGroupPosition']=='start'){
+                    $apiList = array_merge (array ($gk=>$gv), $apiList);
+                }else{
+                    $apiList = array_merge ($apiList, array ($gk=>$gv));
+                }
+            }
         }
 
         include (dirname (__FILE__) . '/EasyApiDocView.php');
