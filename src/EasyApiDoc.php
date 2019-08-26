@@ -2,7 +2,7 @@
 
 namespace AnyChange\EasyApiDoc;
 /**
- * 生成文档
+ * Creat An API Document
  */
 class EasyApiDoc {
     /**
@@ -41,21 +41,6 @@ class EasyApiDoc {
      * @var array
      */
     protected $selfMenuList = array ();
-    /**
-     * @var array
-     */
-    protected $typeMaps = array (
-        'string'  => '字符串',
-        'int'     => '整型',
-        'float'   => '浮点型',
-        'boolean' => '布尔型',
-        'date'    => '日期',
-        'array'   => '数组',
-        'fixed'   => '固定值',
-        'enum'    => '枚举类型',
-        'object'  => '对象',
-        'file'    => '文件'
-    );
 
     /**
      * EasyApiDoc constructor.
@@ -104,29 +89,22 @@ class EasyApiDoc {
         $this->selfMenuGroup = $selfMenuGroup;
     }
 
-    public function setSelfMenuList ($menuGroup, $menuTitle, $methodDesc, $tableTitle = '', $tableList = array (),$menuGroupPosition='start') {
+    public function setSelfMenuList ($menuGroup, $menuTitle, $methodDesc, $tableTitle = '', $tableList = array (), $menuGroupPosition = 'start') {
         $this->selfMenuList[$menuGroup]['menuGroup'] = $menuGroup;
-        $this->selfMenuList[$menuGroup]['menuGroupPosition']=$menuGroupPosition;
+        $this->selfMenuList[$menuGroup]['menuGroupPosition'] = $menuGroupPosition;
         $this->selfMenuList[$menuGroup]['subList'][] = array (
-            'menuTag'     => $menuGroup.$menuTitle,
+            'menuTag'     => $menuGroup . $menuTitle,
             'methodTitle' => $menuTitle,
-            'methodDesc'  => nl2br (str_replace ('\n','<br>',$methodDesc)),
+            'methodDesc'  => nl2br (str_replace ('\n', '<br>', $methodDesc)),
             'tableTitle'  => $tableTitle,
             'tableList'   => $tableList,
         );
     }
 
     /**
-     * 显示
+     * Show The Document Online
      * @Author: zjm
      * @Date  : 2019-08-06 10:16
-     * Instruction：param 类型 参数名 是否必须 描述 | return 类型 参数名 描述
-     * @desc
-     *
-     * @param
-     *
-     * @return
-     * @return mixed
      */
     public function onlineShow () {
         $apiList = array ();
@@ -145,10 +123,9 @@ class EasyApiDoc {
             if ($menuPos !== false) {
                 $menuGroup = strtolower (substr ($apiClassPath, 0, $menuPos));
             } else {
-                $menuGroup = '未分组';
+                $menuGroup = 'No Group';
             }
-
-            //类名
+            //class
             if (empty($this->projectNamespace)) {
                 $apiClassNameArr = explode ('\\', $apiClassPath);
                 if (empty($apiClassNameArr)) {
@@ -162,24 +139,20 @@ class EasyApiDoc {
             } else {
                 $apiClassName = $this->projectNamespace . '\\' . $apiClassPath;
             }
-
-            //检测类是否存
+            //check the class
             if (!class_exists ($apiClassName)) {
                 $errorMessage[] = '"' . $apiClassName . '" Is Not Found,If The Class Exist Namespace,Please Set First.';
                 continue;
             }
-            //特定类排除
+            //exlcude the class
             if (in_array ($apiClassName, $this->projectExcludeClassList)) {
                 continue;
             }
 
-            //类标题
             $classTitle = '';
-            //类说明
             $classDesc = '';
-            // 是否屏蔽此接口类
             $classIgnore = false;
-            //处理类注释
+
             try {
                 $rClass = new \ReflectionClass($apiClassName);
                 $classDocComment = $rClass->getDocComment ();
@@ -188,9 +161,9 @@ class EasyApiDoc {
                 $classDocComment = false;
             }
             $rClass->getDefaultProperties ();
-            //待排除方法
+
             $all_exclude_methods = array ();
-            // 排除父类的方法
+
             while ($parent = $rClass->getParentClass ()) {
                 if ($this->projectIsExcludeParentClass === false) {
                     if (in_array ($parent->getName (), $this->projectExcludeClassList)) {
@@ -211,26 +184,24 @@ class EasyApiDoc {
                 }
             }
 
-            //获取注释类信息
             if ($classDocComment !== false) {
-                //以第一行为标题
+                //Get The Title
                 $classDocCommentArr = explode ("\n", $classDocComment);
                 $classComment = trim ($classDocCommentArr[1]);
                 $classTitle = trim (substr ($classComment, strpos ($classComment, '*') + 1));
                 array_shift ($classDocCommentArr);
                 foreach ($classDocCommentArr as $classComment) {
-//                        //标题描述
 //                        if (empty($classTitle) && strpos ($classComment, '@') === false && strpos ($classComment, '/') === false) {
 //                            $classTitle = substr ($classComment, strpos ($classComment, '*') + 1);
 //                            continue;
 //                        }
-                    //获取类说明
+
                     $classPos = stripos ($classComment, '@desc');
                     if ($classPos !== false) {
                         $classDesc .= substr ($classComment, $classPos + 5);
                         continue;
                     }
-                    //是否屏蔽
+
                     $classPos = stripos ($classComment, '@ignore');
                     if ($classPos !== false) {
                         $classIgnore = true;
@@ -242,10 +213,10 @@ class EasyApiDoc {
             if ($classIgnore) {
                 continue;
             }
-            //获取接口方法
+
             $methods = array_diff (get_class_methods ($apiClassName), $all_exclude_methods);
             sort ($methods);
-            //处理方法注释
+
             foreach ($methods as $mValue) {
                 try {
                     $rMethod = new \Reflectionmethod($apiClassName, $mValue);
@@ -257,76 +228,64 @@ class EasyApiDoc {
                     $errorMessage[] = $e->getMessage ();
                     $methodDocComment = false;
                 }
-                //方法标题
+
                 $methodTitle = '';
-                //方法描述
                 $methodDesc = '';
-                //方法作者
                 $methodAuthor = '';
-                //方法时间
                 $methodDate = '';
-                //是否屏蔽方法
                 $methodIgnore = false;
-                //方法入参
                 $methodParams = array ();
-                //方法出参
                 $methodReturns = array ();
-                //返回示例
-                $methodReturnsExample = '暂时无返回示例';
-                //错误说明
+                $methodReturnsExample = 'No Examples Return';
                 $methodExceptions = array ();
                 if ($methodDocComment !== false) {
-                    //以第一行为标题
                     $methodDocCommentArr = explode ("\n", $methodDocComment);
                     $methodComment = trim ($methodDocCommentArr[1]);
                     $methodTitle = trim (substr ($methodComment, strpos ($methodComment, '*') + 1));
                     array_shift ($methodDocCommentArr);
                     foreach ($methodDocCommentArr as $methodComment) {
-//                            //标题
 //                            if (empty($methodTitle) && strpos ($methodComment, '@') === false && strpos ($methodComment, '/') === false) {
 //                                $methodTitle = substr ($methodComment, strpos ($methodComment, '*') + 1);
 //                                continue;
 //                            }
-                        //@desc注释
+
                         $methodPos = stripos ($methodComment, '@desc');
                         if ($methodPos !== false) {
                             $methodDesc .= substr ($methodComment, $methodPos + 5);
                             continue;
                         }
-                        //@exception注释
+
                         $methodPos = stripos ($methodComment, '@exception');
                         if ($methodPos !== false) {
                             $exArr = explode (' ', trim (substr ($methodComment, $methodPos + 10)));
                             $methodExceptions[$exArr[0]] = $exArr;
                             continue;
                         }
-                        //@ignore注释
+
                         $methodPos = stripos ($methodComment, '@ignore');
                         if ($methodPos !== false) {
                             $methodIgnore = true;
                             continue;
                         }
-                        //@param注释
+
                         $methodPos = stripos ($methodComment, '@param');
                         if ($methodPos !== false) {
-                            //将数组中的空值过滤掉，同时将需要展示的值返回
                             $methodParamCommentArr = array_values (array_filter (explode (' ', substr ($methodComment, $methodPos + 7))));
                             $methodParams[] = array (
                                 'name'    => isset($methodParamCommentArr[1]) ? $methodParamCommentArr[1] : '',
-                                'type'    => isset($methodParamCommentArr[0]) ? (!empty($this->typeMaps[$methodParamCommentArr[0]]) ? $this->typeMaps[$methodParamCommentArr[0]] : $methodParamCommentArr[0]) : '',
+                                'type'    => isset($methodParamCommentArr[0]) ? $methodParamCommentArr[0] : '',
                                 'require' => isset($methodParamCommentArr[2]) ? $methodParamCommentArr[2] : 'false',
                                 'desc'    => isset($methodParamCommentArr[3]) ? $methodParamCommentArr[3] : ''
                             );
                             continue;
                         }
-                        //@return注释
+
                         $methodPos = stripos ($methodComment, '@return');
                         if ($methodPos !== false) {
-                            //将数组中的空值过滤掉，同时将需要展示的值返回
                             $methodReturnCommentArr = array_values (array_filter (explode (' ', substr ($methodComment, $methodPos + 8))));
                             $methodReturns[] = array (
                                 'name'    => isset($methodReturnCommentArr[1]) ? $methodReturnCommentArr[1] : '',
-                                'type'    => isset($methodReturnCommentArr[0]) ? (!empty($this->typeMaps[$methodReturnCommentArr[0]]) ? $this->typeMaps[$methodReturnCommentArr[0]] : $methodReturnCommentArr[0]) : '',
+                                'type'    => isset($methodReturnCommentArr[0]) ? $methodReturnCommentArr[0] : '',
                                 'require' => isset($methodReturnCommentArr[2]) ? $methodReturnCommentArr[2] : 'false',
                                 'desc'    => isset($methodReturnCommentArr[3]) ? $methodReturnCommentArr[3] : ''
                             );
@@ -358,11 +317,11 @@ class EasyApiDoc {
         }
 
         if (!empty($this->selfMenuList)) {
-            foreach ($this->selfMenuList as $gk=>$gv){
-                if($gv['menuGroupPosition']=='start'){
-                    $apiList = array_merge (array ($gk=>$gv), $apiList);
-                }else{
-                    $apiList = array_merge ($apiList, array ($gk=>$gv));
+            foreach ($this->selfMenuList as $gk => $gv) {
+                if ($gv['menuGroupPosition'] == 'start') {
+                    $apiList = array_merge (array ($gk => $gv), $apiList);
+                } else {
+                    $apiList = array_merge ($apiList, array ($gk => $gv));
                 }
             }
         }
@@ -371,15 +330,9 @@ class EasyApiDoc {
     }
 
     /**
-     * 获取文件列表
+     * Get The File List
      * @Author: zjm
      * @Date  : 2019-08-05 17:13
-     * 说明：param 类型 参数名 是否必须 描述 | return 类型 参数名 描述
-     * @desc  遍历源码所在文件夹,获取文件列表
-     *
-     * @param string $dir true 文件目录路径
-     *
-     * @return array 无 true 文件名列表（带路径）
      */
     private function listDir ($dir) {
         $dir .= substr ($dir, -1) == '/' ? '' : '/';

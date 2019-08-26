@@ -9,7 +9,6 @@ Inspired by [PhalApi doc]( http://demo.phalapi.net/docs.php)
 #### Use [Composer](https://getcomposer.org/) to install the library.
 
 - Add the dependency to your project:
-
 ```
 bash:
 
@@ -22,13 +21,9 @@ Or:
         "anychange/easyapidoc":"dev-master"
     }
 }
-
 ```
-  
 ## Usage
-
 ### Rules：
-接口标题(注释的第一行)、@dese(接口说明)、@param(接口入参 类型 参数名 是否必须 描述)、@return(接口出参 类型 参数名 是否必返 描述)
 ```php
     /**
      * API Title
@@ -36,9 +31,9 @@ Or:
      * @Date  : 2019-08-06 10:16
      * @desc API Instruction
      *
-     * @param string mobile true  手机号
+     * @param string mobile true  The User Mobile
      *
-     * @return string sex true 性别
+     * @return string sex true The User Sex
      */
 ```
 ```php

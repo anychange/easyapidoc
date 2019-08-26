@@ -36,7 +36,7 @@
                         </div>
                         <?php foreach ($apiList as $menuGroup => $groupInfo) { ?>
                             <div class="item">
-                                <!--以下title content iten 选中追加class名active-->
+                                <!--title content iten add the class 'active' for choosing-->
                                 <h4 class="title " style="font-size:16px;margin:0px;">
                                     <i class="dropdown icon"></i>
                                     <?php echo $groupInfo['menuGroup'] ?>
@@ -63,7 +63,7 @@
                                 <h2 class='ui header'><?php echo $menuInfo['methodTitle']; ?></h2><br/>
                                 <span class='ui teal tag label' style="font-size: 0.96rem"><?php echo $menuInfo['methodPath']; ?></span>
                                 <div class="ui raised segment">
-                                    <span class="ui red ribbon label" style="font-size: 0.96rem">说明</span>
+                                    <span class="ui red ribbon label" style="font-size: 0.96rem">Instructions</span>
                                     <div class="ui message">
                                         <p><?php echo $menuInfo['methodDesc']; ?></p>
                                     </div>
@@ -91,14 +91,14 @@
                                     </table>
                                 <?php } ?>
                                 <?php if (!empty($menuInfo['methodParams'])) { ?>
-                                    <h3><i class="sign in alternate icon"></i>接口参数</h3>
+                                    <h3><i class="sign in alternate icon"></i>Inputs</h3>
                                     <table class="ui red celled striped table">
                                         <thead>
                                         <tr>
-                                            <th width="30%">参数名字</th>
-                                            <th width="15%">参数类型</th>
-                                            <th width="15%">是否必须</th>
-                                            <th>说明</th>
+                                            <th width="30%">Field Name</th>
+                                            <th width="15%">Field Type</th>
+                                            <th width="15%">Require</th>
+                                            <th>Description</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -107,9 +107,9 @@
                                                 <td><?php echo $pvalue['name']; ?></td>
                                                 <td><?php echo $pvalue['type']; ?></td>
                                                 <td><?php if ($pvalue['require'] == 'true') { ?>
-                                                        <span style="color: red">是</span>
+                                                        <span style="color: red">true</span>
                                                     <?php } else { ?>
-                                                        否
+                                                        false
                                                     <?php } ?>
                                                 </td>
                                                 <td><?php echo $pvalue['desc']; ?></td>
@@ -120,14 +120,14 @@
                                 <?php } ?>
 
                                 <?php if (!empty($menuInfo['methodReturns'])) { ?>
-                                    <h3><i class="sign out alternate icon"></i>返回结果</h3>
+                                    <h3><i class="sign out alternate icon"></i>Outputs</h3>
                                     <table class="ui green celled striped table">
                                         <thead>
                                         <tr>
-                                            <th width="30%">返回字段</th>
-                                            <th width="15%">字段类型</th>
-                                            <th width="15%">是否必返</th>
-                                            <th>说明</th>
+                                            <th width="30%">Field Name</th>
+                                            <th width="15%">Field Type</th>
+                                            <th width="15%">Require</th>
+                                            <th>Description</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -136,9 +136,9 @@
                                                 <td><?php echo $pvalue['name']; ?></td>
                                                 <td><?php echo $pvalue['type']; ?></td>
                                                 <td><?php if ($pvalue['require'] == 'true') { ?>
-                                                        <span style="color: red">是</span>
+                                                        <span style="color: red">true</span>
                                                     <?php } else { ?>
-                                                        否
+                                                        false
                                                     <?php } ?>
                                                 </td>
                                                 <td><?php echo $pvalue['desc']; ?></td>
@@ -149,12 +149,12 @@
                                 <?php } ?>
 
                                 <?php if (!empty($menuInfo['methodExceptions'])) { ?>
-                                    <h3><i class="bell icon"></i>异常情况</h3>
+                                    <h3><i class="bell icon"></i>Exceptions</h3>
                                     <table class="ui red celled striped table">
                                         <thead>
                                         <tr>
-                                            <th>错误码</th>
-                                            <th>错误描述信息</th>
+                                            <th>Code</th>
+                                            <th>Message</th>
                                         </thead>
                                         <tbody>
                                         <?php
@@ -170,14 +170,14 @@
 
                                 <?php if (!empty($menuInfo['methodPath'])) { ?>
                                     <h3>
-                                        <i class="bug icon"></i>在线测试 &nbsp;&nbsp;
+                                        <i class="bug icon"></i>Online Testing &nbsp;&nbsp;
                                     </h3>
                                     <table class="ui green celled striped table">
                                         <thead>
                                         <tr>
-                                            <th width="30%">参数</th>
-                                            <th width="15%">是否必填</th>
-                                            <th>值</th>
+                                            <th width="30%">Param</th>
+                                            <th width="15%">Require</th>
+                                            <th>Value</th>
                                         </tr>
                                         </thead>
                                         <tbody id="params">
@@ -185,11 +185,11 @@
                                             <tr>
                                                 <td><?php echo $pvalue['name']; ?></td>
                                                 <td><?php if (isset($pvalue['require']) && $pvalue['require']) { ?>
-                                                        <font color="red">必须</font><?php } else { ?>可选<?php } ?>
+                                                        <font color="red">true</font><?php } else { ?>false<?php } ?>
                                                 </td>
                                                 <td>
                                                     <div class="ui fluid input">
-                                                        <input name="<?php echo $pvalue['name']; ?>" placeholder="<?php echo htmlspecialchars (trim ($pvalue['desc'])); ?>" style="width:100%;" class="C_input" <?php if ($pvalue['type'] == '文件') { ?>type="file" multiple="multiple" <?php }else { ?>type="text" <?php } ?>/>
+                                                        <input name="<?php echo $pvalue['name']; ?>" placeholder="<?php echo htmlspecialchars (trim ($pvalue['desc'])); ?>" style="width:100%;" class="C_input" <?php if ($pvalue['type'] == 'file') { ?>type="file" multiple="multiple" <?php }else { ?>type="text" <?php } ?>/>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -197,14 +197,14 @@
                                         </tbody>
                                     </table>
                                     <div class="ui fluid action input">
-                                        <input placeholder="请求的接口链接" type="text" name="request_url" value="<?php echo rtrim ($this->projectApiBaseUrl, '/') . $menuInfo['methodPath']; ?>">
-                                        <button class="ui button green" id="submit">请求当前接口</button>
+                                        <input placeholder="Request Url" type="text" name="request_url" value="<?php echo rtrim ($this->projectApiBaseUrl, '/') . $menuInfo['methodPath']; ?>">
+                                        <button class="ui button green" id="submit">Request Now</button>
                                     </div>
                                     <div class="ui blue message" id="json_output"></div>
                                 <?php } ?>
 
                                 <?php if (!empty($menuInfo['methodReturnsExample'])) { ?>
-                                    <h3><i class="code icon"></i>接口返回示例</h3>
+                                    <h3><i class="code icon"></i>Example</h3>
                                     <script>hljs.initHighlightingOnLoad();</script>
                                     <div class="ui text">
                                         <pre><code><?php echo $menuInfo['methodReturnsExample']; ?></code></pre>
@@ -212,8 +212,8 @@
                                 <?php } ?>
 
                                 <div class="ui blue message">
-                                    <strong>温馨提示：</strong>
-                                    此接口服务列表根据后台代码自动生成。
+                                    <strong>Tips：</strong>
+                                    The API List is Generating By The Background Code.
                                 </div>
                             </div>
                             <?php $num2++;
@@ -237,7 +237,6 @@
 <script type="text/javascript">
     $('.ui.sticky').sticky();
     $('.accordion.menu a.item').tab({'deactivate': 'all'}).click(function () {
-        //当点击跳转链接后，回到页面顶部位置
         $('body,html').animate({scrollTop: 0}, 500);
         return false;
     });
@@ -272,7 +271,7 @@
         var param = [];
         $("td input").each(function (index, e) {
             if ($.trim(e.value)) {
-                if (e.type != '文件') {
+                if (e.type != 'file') {
                     if ($(e).data('source') == 'get') {
                         param.push(e.name + '=' + e.value);
                     } else {
@@ -293,6 +292,5 @@
         param = param.join('&');
         return {param: param, data: data};
     }
-
 </script>
 </html>
