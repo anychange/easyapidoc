@@ -115,205 +115,200 @@ class EasyApiDoc {
         } else {
             $files = $this->listDir ($this->projectApiPath);
         }
-        foreach ($files as $aFile) {
-            $apiClassPath = strstr ($aFile, $this->projectApiPath);
-            $apiClassPath = str_replace (array ($this->projectApiPath, '/', '.php'), array ('', '\\', ''), $apiClassPath);
-            $apiClassPath = ltrim ($apiClassPath, '\\');
-            $menuPos = stripos ($apiClassPath, '\\');
-            if ($menuPos !== false) {
-                $menuGroup = strtolower (substr ($apiClassPath, 0, $menuPos));
-            } else {
-                $menuGroup = 'No Group';
-            }
-            //class
-            if (empty($this->projectNamespace)) {
-                $apiClassNameArr = explode ('\\', $apiClassPath);
-                if (empty($apiClassNameArr)) {
-                    $apiClassName = $apiClassPath;
+        try {
+            foreach ($files as $aFile) {
+                $apiClassPath = strstr ($aFile, $this->projectApiPath);
+                $apiClassPath = str_replace (array ($this->projectApiPath, '/', '.php'), array ('', '\\', ''), $apiClassPath);
+                $apiClassPath = ltrim ($apiClassPath, '\\');
+                $menuPos = stripos ($apiClassPath, '\\');
+                if ($menuPos !== false) {
+                    $menuGroup = strtolower (substr ($apiClassPath, 0, $menuPos));
                 } else {
-                    $apiClassName = array_pop ($apiClassNameArr);
+                    $menuGroup = 'No Group';
                 }
+                //class
+                if (empty($this->projectNamespace)) {
+                    $apiClassNameArr = explode ('\\', $apiClassPath);
+                    if (empty($apiClassNameArr)) {
+                        $apiClassName = $apiClassPath;
+                    } else {
+                        $apiClassName = array_pop ($apiClassNameArr);
+                    }
+                    if (!class_exists ($apiClassName)) {
+                        include ($aFile);
+                    }
+                } else {
+                    $apiClassName = $this->projectNamespace . '\\' . $apiClassPath;
+                }
+                //check the class
                 if (!class_exists ($apiClassName)) {
-                    include ($aFile);
+                    $errorMessage[] = '"' . $apiClassName . '" Is Not Found,If The Class Exist Namespace,Please Set First.';
+                    continue;
                 }
-            } else {
-                $apiClassName = $this->projectNamespace . '\\' . $apiClassPath;
-            }
-            //check the class
-            if (!class_exists ($apiClassName)) {
-                $errorMessage[] = '"' . $apiClassName . '" Is Not Found,If The Class Exist Namespace,Please Set First.';
-                continue;
-            }
-            //exlcude the class
-            if (in_array ($apiClassName, $this->projectExcludeClassList)) {
-                continue;
-            }
+                //exlcude the class
+                if (in_array ($apiClassName, $this->projectExcludeClassList)) {
+                    continue;
+                }
 
-            $classTitle = '';
-            $classDesc = '';
-            $classIgnore = false;
+                $classTitle = '';
+                $classDesc = '';
+                $classIgnore = false;
 
-            try {
                 $rClass = new \ReflectionClass($apiClassName);
                 $classDocComment = $rClass->getDocComment ();
-            } catch (\Exception $e) {
-                $errorMessage[] = $e->getMessage ();
-                $classDocComment = false;
-            }
-            $rClass->getDefaultProperties ();
 
-            $all_exclude_methods = array ();
+                $rClass->getDefaultProperties ();
 
-            while ($parent = $rClass->getParentClass ()) {
-                if ($this->projectIsExcludeParentClass === false) {
-                    if (in_array ($parent->getName (), $this->projectExcludeClassList)) {
+                $all_exclude_methods = array ();
+
+                while ($parent = $rClass->getParentClass ()) {
+                    if ($this->projectIsExcludeParentClass === false) {
+                        if (in_array ($parent->getName (), $this->projectExcludeClassList)) {
+                            $all_exclude_methods = array_merge ($all_exclude_methods, get_class_methods ($parent->getName ()));
+                            break;
+                        }
+                        $classDocComment = $parent->getDocComment () . "\n" . $classDocComment;
+                    } else {
                         $all_exclude_methods = array_merge ($all_exclude_methods, get_class_methods ($parent->getName ()));
                         break;
                     }
-                    $classDocComment = $parent->getDocComment () . "\n" . $classDocComment;
-                } else {
-                    $all_exclude_methods = array_merge ($all_exclude_methods, get_class_methods ($parent->getName ()));
-                    break;
+                    $rClass = $parent;
                 }
-                $rClass = $parent;
-            }
 
-            foreach ($this->projectExcludeFuncList as $funcv) {
-                if (stripos ($funcv, $apiClassName) !== false) {
-                    array_push ($all_exclude_methods, str_replace (array ($apiClassName, '\\'), array ('', ''), strstr ($funcv, $apiClassName)));
+                foreach ($this->projectExcludeFuncList as $funcv) {
+                    if (stripos ($funcv, $apiClassName) !== false) {
+                        array_push ($all_exclude_methods, str_replace (array ($apiClassName, '\\'), array ('', ''), strstr ($funcv, $apiClassName)));
+                    }
                 }
-            }
 
-            if ($classDocComment !== false) {
-                //Get The Title
-                $classDocCommentArr = explode ("\n", $classDocComment);
-                $classComment = trim ($classDocCommentArr[1]);
-                $classTitle = trim (substr ($classComment, strpos ($classComment, '*') + 1));
-                array_shift ($classDocCommentArr);
-                foreach ($classDocCommentArr as $classComment) {
+                if ($classDocComment !== false) {
+                    //Get The Title
+                    $classDocCommentArr = explode ("\n", $classDocComment);
+                    $classComment = trim ($classDocCommentArr[1]);
+                    $classTitle = trim (substr ($classComment, strpos ($classComment, '*') + 1));
+                    array_shift ($classDocCommentArr);
+                    foreach ($classDocCommentArr as $classComment) {
 //                        if (empty($classTitle) && strpos ($classComment, '@') === false && strpos ($classComment, '/') === false) {
 //                            $classTitle = substr ($classComment, strpos ($classComment, '*') + 1);
 //                            continue;
 //                        }
 
-                    $classPos = stripos ($classComment, '@desc');
-                    if ($classPos !== false) {
-                        $classDesc .= substr ($classComment, $classPos + 5);
-                        continue;
-                    }
+                        $classPos = stripos ($classComment, '@desc');
+                        if ($classPos !== false) {
+                            $classDesc .= substr ($classComment, $classPos + 5);
+                            continue;
+                        }
 
-                    $classPos = stripos ($classComment, '@ignore');
-                    if ($classPos !== false) {
-                        $classIgnore = true;
-                        continue;
+                        $classPos = stripos ($classComment, '@ignore');
+                        if ($classPos !== false) {
+                            $classIgnore = true;
+                            continue;
+                        }
                     }
                 }
-            }
 
-            if ($classIgnore) {
-                continue;
-            }
+                if ($classIgnore) {
+                    continue;
+                }
 
-            $methods = array_diff (get_class_methods ($apiClassName), $all_exclude_methods);
-            sort ($methods);
+                $methods = array_diff (get_class_methods ($apiClassName), $all_exclude_methods);
+                sort ($methods);
 
-            foreach ($methods as $mValue) {
-                try {
+                foreach ($methods as $mValue) {
                     $rMethod = new \Reflectionmethod($apiClassName, $mValue);
                     if (!$rMethod->isPublic () || strpos ($mValue, '__') === 0) {
                         continue;
                     }
                     $methodDocComment = $rMethod->getDocComment ();
-                } catch (\Exception $e) {
-                    $errorMessage[] = $e->getMessage ();
-                    $methodDocComment = false;
-                }
 
-                $methodTitle = '';
-                $methodDesc = '';
-                $methodAuthor = '';
-                $methodDate = '';
-                $methodIgnore = false;
-                $methodParams = array ();
-                $methodReturns = array ();
-                $methodReturnsExample = 'No Examples Return';
-                $methodExceptions = array ();
-                if ($methodDocComment !== false) {
-                    $methodDocCommentArr = explode ("\n", $methodDocComment);
-                    $methodComment = trim ($methodDocCommentArr[1]);
-                    $methodTitle = trim (substr ($methodComment, strpos ($methodComment, '*') + 1));
-                    array_shift ($methodDocCommentArr);
-                    foreach ($methodDocCommentArr as $methodComment) {
+                    $methodTitle = '';
+                    $methodDesc = '';
+                    $methodAuthor = '';
+                    $methodDate = '';
+                    $methodIgnore = false;
+                    $methodParams = array ();
+                    $methodReturns = array ();
+                    $methodReturnsExample = 'No Examples Return';
+                    $methodExceptions = array ();
+                    if ($methodDocComment !== false) {
+                        $methodDocCommentArr = explode ("\n", $methodDocComment);
+                        $methodComment = trim ($methodDocCommentArr[1]);
+                        $methodTitle = trim (substr ($methodComment, strpos ($methodComment, '*') + 1));
+                        array_shift ($methodDocCommentArr);
+                        foreach ($methodDocCommentArr as $methodComment) {
 //                            if (empty($methodTitle) && strpos ($methodComment, '@') === false && strpos ($methodComment, '/') === false) {
 //                                $methodTitle = substr ($methodComment, strpos ($methodComment, '*') + 1);
 //                                continue;
 //                            }
 
-                        $methodPos = stripos ($methodComment, '@desc');
-                        if ($methodPos !== false) {
-                            $methodDesc .= substr ($methodComment, $methodPos + 5);
-                            continue;
-                        }
+                            $methodPos = stripos ($methodComment, '@desc');
+                            if ($methodPos !== false) {
+                                $methodDesc .= substr ($methodComment, $methodPos + 5);
+                                continue;
+                            }
 
-                        $methodPos = stripos ($methodComment, '@exception');
-                        if ($methodPos !== false) {
-                            $exArr = explode (' ', trim (substr ($methodComment, $methodPos + 10)));
-                            $methodExceptions[$exArr[0]] = $exArr;
-                            continue;
-                        }
+                            $methodPos = stripos ($methodComment, '@exception');
+                            if ($methodPos !== false) {
+                                $exArr = explode (' ', trim (substr ($methodComment, $methodPos + 10)));
+                                $methodExceptions[$exArr[0]] = $exArr;
+                                continue;
+                            }
 
-                        $methodPos = stripos ($methodComment, '@ignore');
-                        if ($methodPos !== false) {
-                            $methodIgnore = true;
-                            continue;
-                        }
+                            $methodPos = stripos ($methodComment, '@ignore');
+                            if ($methodPos !== false) {
+                                $methodIgnore = true;
+                                continue;
+                            }
 
-                        $methodPos = stripos ($methodComment, '@param');
-                        if ($methodPos !== false) {
-                            $methodParamCommentArr = array_values (array_filter (explode (' ', substr ($methodComment, $methodPos + 7))));
-                            $methodParams[] = array (
-                                'type'    => (string)array_shift ($methodParamCommentArr),
-                                'name'    => (string)array_shift ($methodParamCommentArr),
-                                'require' => (string)array_shift ($methodParamCommentArr),
-                                'desc'    => implode (' ',$methodParamCommentArr)
-                            );
-                            continue;
-                        }
+                            $methodPos = stripos ($methodComment, '@param');
+                            if ($methodPos !== false) {
+                                $methodParamCommentArr = array_values (array_filter (explode (' ', substr ($methodComment, $methodPos + 7))));
+                                $methodParams[] = array (
+                                    'type'    => (string)array_shift ($methodParamCommentArr),
+                                    'name'    => (string)array_shift ($methodParamCommentArr),
+                                    'require' => (string)array_shift ($methodParamCommentArr),
+                                    'desc'    => implode (' ',$methodParamCommentArr)
+                                );
+                                continue;
+                            }
 
-                        $methodPos = stripos ($methodComment, '@return');
-                        if ($methodPos !== false) {
-                            $methodReturnCommentArr = array_values (array_filter (explode (' ', substr ($methodComment, $methodPos + 8))));
-                            $methodReturns[] = array (
-                                'type'    => (string)array_shift ($methodReturnCommentArr),
-                                'name'    => (string)array_shift ($methodReturnCommentArr),
-                                'require' => (string)array_shift ($methodReturnCommentArr),
-                                'desc'    => implode (' ',$methodReturnCommentArr)
-                            );
-                            continue;
+                            $methodPos = stripos ($methodComment, '@return');
+                            if ($methodPos !== false) {
+                                $methodReturnCommentArr = array_values (array_filter (explode (' ', substr ($methodComment, $methodPos + 8))));
+                                $methodReturns[] = array (
+                                    'type'    => (string)array_shift ($methodReturnCommentArr),
+                                    'name'    => (string)array_shift ($methodReturnCommentArr),
+                                    'require' => (string)array_shift ($methodReturnCommentArr),
+                                    'desc'    => implode (' ',$methodReturnCommentArr)
+                                );
+                                continue;
+                            }
                         }
                     }
-                }
 
-                if ($methodIgnore) {
-                    continue;
-                }
+                    if ($methodIgnore) {
+                        continue;
+                    }
 
-                $menuGroup = !empty($this->selfMenuGroup[$menuGroup]) ? $this->selfMenuGroup[$menuGroup] : $menuGroup;
-                $apiList[$menuGroup]['menuGroup'] = $menuGroup;
-                $menuTag = $apiClassName . '\\' . $mValue;
-                $apiList[$menuGroup]['subList'][] = array (
-                    'menuTag'              => $menuTag,
-                    'methodTitle'          => $methodTitle,
-                    'methodPath'           => '/' . strtolower (str_replace (array ($this->projectNamespace, '\\'), array ('', '/'), $apiClassPath . '/' . ucfirst ($mValue))),
-                    'methodDesc'           => $methodDesc,
-                    'methodAuthor'         => $methodAuthor,
-                    'methodDate'           => $methodDate,
-                    'methodParams'         => $methodParams,
-                    'methodReturns'        => $methodReturns,
-                    'methodExceptions'     => $methodExceptions,
-                    'methodReturnsExample' => $methodReturnsExample
-                );
+                    $menuGroup = !empty($this->selfMenuGroup[$menuGroup]) ? $this->selfMenuGroup[$menuGroup] : $menuGroup;
+                    $apiList[$menuGroup]['menuGroup'] = $menuGroup;
+                    $menuTag = $apiClassName . '\\' . $mValue;
+                    $apiList[$menuGroup]['subList'][] = array (
+                        'menuTag'              => $menuTag,
+                        'methodTitle'          => $methodTitle,
+                        'methodPath'           => '/' . strtolower (str_replace (array ($this->projectNamespace, '\\'), array ('', '/'), $apiClassPath . '/' . ucfirst ($mValue))),
+                        'methodDesc'           => $methodDesc,
+                        'methodAuthor'         => $methodAuthor,
+                        'methodDate'           => $methodDate,
+                        'methodParams'         => $methodParams,
+                        'methodReturns'        => $methodReturns,
+                        'methodExceptions'     => $methodExceptions,
+                        'methodReturnsExample' => $methodReturnsExample
+                    );
+                }
             }
+        } catch (\Exception $e) {
+            $errorMessage[] = $e->getMessage ();
         }
 
         if (!empty($this->selfMenuList)) {
