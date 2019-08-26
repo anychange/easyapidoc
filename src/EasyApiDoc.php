@@ -272,10 +272,10 @@ class EasyApiDoc {
                         if ($methodPos !== false) {
                             $methodParamCommentArr = array_values (array_filter (explode (' ', substr ($methodComment, $methodPos + 7))));
                             $methodParams[] = array (
-                                'name'    => isset($methodParamCommentArr[1]) ? $methodParamCommentArr[1] : '',
-                                'type'    => isset($methodParamCommentArr[0]) ? $methodParamCommentArr[0] : '',
-                                'require' => isset($methodParamCommentArr[2]) ? $methodParamCommentArr[2] : 'false',
-                                'desc'    => isset($methodParamCommentArr[3]) ? $methodParamCommentArr[3] : ''
+                                'type'    => (string)array_shift ($methodParamCommentArr),
+                                'name'    => (string)array_shift ($methodParamCommentArr),
+                                'require' => (string)array_shift ($methodParamCommentArr),
+                                'desc'    => implode (' ',$methodParamCommentArr)
                             );
                             continue;
                         }
@@ -284,10 +284,10 @@ class EasyApiDoc {
                         if ($methodPos !== false) {
                             $methodReturnCommentArr = array_values (array_filter (explode (' ', substr ($methodComment, $methodPos + 8))));
                             $methodReturns[] = array (
-                                'name'    => isset($methodReturnCommentArr[1]) ? $methodReturnCommentArr[1] : '',
-                                'type'    => isset($methodReturnCommentArr[0]) ? $methodReturnCommentArr[0] : '',
-                                'require' => isset($methodReturnCommentArr[2]) ? $methodReturnCommentArr[2] : 'false',
-                                'desc'    => isset($methodReturnCommentArr[3]) ? $methodReturnCommentArr[3] : ''
+                                'type'    => (string)array_shift ($methodReturnCommentArr),
+                                'name'    => (string)array_shift ($methodReturnCommentArr),
+                                'require' => (string)array_shift ($methodReturnCommentArr),
+                                'desc'    => implode (' ',$methodReturnCommentArr)
                             );
                             continue;
                         }
