@@ -22,14 +22,6 @@ class EasyApiDoc {
      */
     protected $projectApiPath = '';
     /**
-     * @var array
-     */
-    protected $projectExcludeClassList = array ();
-    /**
-     * @var array
-     */
-    protected $projectExcludeFuncList = array ();
-    /**
      * @var bool
      */
     protected $projectIsExcludeParentClass = true;
@@ -63,22 +55,6 @@ class EasyApiDoc {
 
     public function setProjectApiPath ($projectApiPath) {
         $this->projectApiPath = $projectApiPath;
-    }
-
-    public function setProjectExcludeClassList ($projectExcludeClassList) {
-        if (is_array ($projectExcludeClassList)) {
-            $this->projectExcludeClassList = array_merge ($this->projectExcludeClassList, $projectExcludeClassList);
-        } else {
-            $this->projectExcludeClassList[] = $projectExcludeClassList;
-        }
-    }
-
-    public function setProjectExcludeFuncList ($projectExcludeFuncList) {
-        if (is_array ($projectExcludeFuncList)) {
-            $this->projectExcludeFuncList = array_merge ($this->projectExcludeFuncList, $projectExcludeFuncList);
-        } else {
-            $this->projectExcludeFuncList[] = $projectExcludeFuncList;
-        }
     }
 
     public function setProjectIsExcludeParentClass ($projectIsExcludeParentClass) {
@@ -145,10 +121,6 @@ class EasyApiDoc {
                     $errorMessage[] = '"' . $apiClassName . '" Is Not Found,If The Class Exist Namespace,Please Set First.';
                     continue;
                 }
-                //exlcude the class
-                if (in_array ($apiClassName, $this->projectExcludeClassList)) {
-                    continue;
-                }
 
                 $classTitle = '';
                 $classDesc = '';
@@ -163,22 +135,12 @@ class EasyApiDoc {
 
                 while ($parent = $rClass->getParentClass ()) {
                     if ($this->projectIsExcludeParentClass === false) {
-                        if (in_array ($parent->getName (), $this->projectExcludeClassList)) {
-                            $all_exclude_methods = array_merge ($all_exclude_methods, get_class_methods ($parent->getName ()));
-                            break;
-                        }
                         $classDocComment = $parent->getDocComment () . "\n" . $classDocComment;
                     } else {
                         $all_exclude_methods = array_merge ($all_exclude_methods, get_class_methods ($parent->getName ()));
                         break;
                     }
                     $rClass = $parent;
-                }
-
-                foreach ($this->projectExcludeFuncList as $funcv) {
-                    if (stripos ($funcv, $apiClassName) !== false) {
-                        array_push ($all_exclude_methods, str_replace (array ($apiClassName, '\\'), array ('', ''), strstr ($funcv, $apiClassName)));
-                    }
                 }
 
                 if ($classDocComment !== false) {

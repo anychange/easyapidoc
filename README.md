@@ -23,6 +23,7 @@ Or:
 }
 ```
 ## Usage
+If You Want To Exclude One Class Or Fuction,Use '@ignore'.
 ### Rules：
 ```php
     /**
@@ -43,10 +44,6 @@ $doc =new \AnyChange\EasyApiDoc\EasyApiDoc();
 $this->setProjectName( 'myproject');
 //Set The Basic Access Url For API Testing 
 $this->setProjectApiBaseUrl('http://192.168.1.209/v1');
-//Set The ClassList That Need Exclude
-$this->setProjectExcludeClassList(array ('App\Controllers\BaseController'));
-//Set The FunctionList That Need Exclude
-$this->setProjectExcludeFuncList(array ('App\Controllers\V1\About\index'));
 //Set The MenuGroup's Self Reflection
 $this->setSelfMenuGroup(array ('my'=> 'My Account'));
 //Set The Self Menu List Which Will Put In The Start Of The List As Default
