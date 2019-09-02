@@ -273,15 +273,16 @@ class EasyApiDoc {
             $errorMessage[] = $e->getMessage ();
         }
 
-        if (!empty($this->selfMenuList)) {
-            foreach ($this->selfMenuList as $gk => $gv) {
-                if ($gv['menuGroupPosition'] == 'start') {
-                    $apiList = array_merge (array ($gk => $gv), $apiList);
-                } else {
-                    $apiList = array_merge ($apiList, array ($gk => $gv));
-                }
+        $start=array ();
+        $stop=array ();
+        foreach ($this->selfMenuList as $gk => $gv) {
+            if ($gv['menuGroupPosition'] == 'start') {
+                $start[$gk]=$gv;
+            } else {
+                $stop[$gk]=$gv;
             }
         }
+        $apiList = array_merge ($start,$apiList, $stop);
 
         include (dirname (__FILE__) . '/EasyApiDocView.php');
     }
