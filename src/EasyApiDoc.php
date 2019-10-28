@@ -22,10 +22,6 @@ class EasyApiDoc {
      */
     protected $projectApiPath = '';
     /**
-     * @var bool
-     */
-    protected $projectIsExcludeParentClass = true;
-    /**
      * @var array
      */
     protected $selfMenuGroup = array ();
@@ -55,10 +51,6 @@ class EasyApiDoc {
 
     public function setProjectApiPath ($projectApiPath) {
         $this->projectApiPath = $projectApiPath;
-    }
-
-    public function setProjectIsExcludeParentClass ($projectIsExcludeParentClass) {
-        $this->projectIsExcludeParentClass = $projectIsExcludeParentClass;
     }
 
     public function setSelfMenuGroup ($selfMenuGroup) {
@@ -133,8 +125,9 @@ class EasyApiDoc {
 
                 $all_exclude_methods = array ();
 
+                $IsExcludeParentClass=true;
                 while ($parent = $rClass->getParentClass ()) {
-                    if ($this->projectIsExcludeParentClass === false) {
+                    if ($IsExcludeParentClass === false) {
                         $classDocComment = $parent->getDocComment () . "\n" . $classDocComment;
                     } else {
                         $all_exclude_methods = array_merge ($all_exclude_methods, get_class_methods ($parent->getName ()));
