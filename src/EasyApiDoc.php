@@ -113,7 +113,7 @@ class EasyApiDoc {
                 }
                 //check the class
                 if (!class_exists ($apiClassName)) {
-                    $errorMessage[] = '"' . $apiClassName . '" Is Not Found,If The Class Exist Namespace,Please Set First.';
+                    $errorMessage[] = 'The Class "' . $apiClassName . '" Is Not Found,If The Class Exist Namespace,Please Set First.';
                     continue;
                 }
 
