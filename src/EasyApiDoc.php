@@ -61,11 +61,14 @@ class EasyApiDoc {
         $this->selfMenuList[$menuGroup]['menuGroup'] = $menuGroup;
         $this->selfMenuList[$menuGroup]['menuGroupPosition'] = $menuGroupPosition;
         $this->selfMenuList[$menuGroup]['subList'][] = array (
-            'menuTag'     => $menuGroup . $menuTitle,
-            'methodTitle' => $menuTitle,
-            'methodDesc'  => nl2br (str_replace ('\n', '<br>', $methodDesc)),
-            'tableTitle'  => $tableTitle,
-            'tableList'   => $tableList,
+            'menuTag'      => $menuGroup . $menuTitle,
+            'methodTitle'  => $menuTitle,
+            'methodPath'   => '',
+            'methodDesc'   => nl2br (str_replace ('\n', '<br>', $methodDesc)),
+            'methodAuthor' => '',
+            'methodDate'   => '',
+            'tableTitle'   => $tableTitle,
+            'tableList'    => $tableList,
         );
     }
 
@@ -125,7 +128,7 @@ class EasyApiDoc {
 
                 $all_exclude_methods = array ();
 
-                $IsExcludeParentClass=true;
+                $IsExcludeParentClass = true;
                 while ($parent = $rClass->getParentClass ()) {
                     if ($IsExcludeParentClass === false) {
                         $classDocComment = $parent->getDocComment () . "\n" . $classDocComment;
@@ -222,7 +225,7 @@ class EasyApiDoc {
                                     'type'    => (string)array_shift ($methodParamCommentArr),
                                     'name'    => (string)array_shift ($methodParamCommentArr),
                                     'require' => (string)array_shift ($methodParamCommentArr),
-                                    'desc'    => implode (' ',$methodParamCommentArr)
+                                    'desc'    => implode (' ', $methodParamCommentArr)
                                 );
                                 continue;
                             }
@@ -234,7 +237,7 @@ class EasyApiDoc {
                                     'type'    => (string)array_shift ($methodReturnCommentArr),
                                     'name'    => (string)array_shift ($methodReturnCommentArr),
                                     'require' => (string)array_shift ($methodReturnCommentArr),
-                                    'desc'    => implode (' ',$methodReturnCommentArr)
+                                    'desc'    => implode (' ', $methodReturnCommentArr)
                                 );
                                 continue;
                             }
@@ -266,16 +269,16 @@ class EasyApiDoc {
             $errorMessage[] = $e->getMessage ();
         }
 
-        $start=array ();
-        $stop=array ();
+        $start = array ();
+        $stop = array ();
         foreach ($this->selfMenuList as $gk => $gv) {
             if ($gv['menuGroupPosition'] == 'start') {
-                $start[$gk]=$gv;
+                $start[$gk] = $gv;
             } else {
-                $stop[$gk]=$gv;
+                $stop[$gk] = $gv;
             }
         }
-        $apiList = array_merge ($start,$apiList, $stop);
+        $apiList = array_merge ($start, $apiList, $stop);
 
         include (dirname (__FILE__) . '/EasyApiDocView.php');
     }
