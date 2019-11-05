@@ -12,15 +12,15 @@ class EasyApiDoc {
     /**
      * @var string
      */
-    protected $projectApiBaseUrl = '';
+    protected $apiBaseUrl = '';
     /**
      * @var string
      */
-    protected $projectNamespace = '';
+    protected $namespace = '';
     /**
      * @var string
      */
-    protected $projectApiPath = '';
+    protected $apiPath = '';
     /**
      * @var array
      */
@@ -41,16 +41,16 @@ class EasyApiDoc {
         $this->projectName = $projectName;
     }
 
-    public function setProjectApiBaseUrl ($projectApiBaseUrl) {
-        $this->projectApiBaseUrl = $projectApiBaseUrl;
+    public function setApiBaseUrl ($apiBaseUrl) {
+        $this->apiBaseUrl = $apiBaseUrl;
     }
 
-    public function setProjectNamespace ($projectNamespace) {
-        $this->projectNamespace = $projectNamespace;
+    public function setNamespace ($namespace) {
+        $this->namespace = $namespace;
     }
 
-    public function setProjectApiPath ($projectApiPath) {
-        $this->projectApiPath = $projectApiPath;
+    public function setApiPath ($apiPath) {
+        $this->apiPath = $apiPath;
     }
 
     public function setSelfMenuGroup ($selfMenuGroup) {
@@ -77,16 +77,16 @@ class EasyApiDoc {
     public function onlineShow () {
         $apiList = array ();
         $errorMessage = array ();
-        if (empty($this->projectApiPath) || !is_dir ($this->projectApiPath)) {
+        if (empty($this->apiPath) || !is_dir ($this->apiPath)) {
             $files = array ();
-            $errorMessage[] = 'The \'projectApiPath\' Is Not Found Or Is Not A Dir Path';
+            $errorMessage[] = 'The \'apiPath\' Is Not Found Or Is Not A Dir Path';
         } else {
-            $files = $this->listDir ($this->projectApiPath);
+            $files = $this->listDir ($this->apiPath);
         }
         try {
             foreach ($files as $aFile) {
-                $apiClassPath = strstr ($aFile, $this->projectApiPath);
-                $apiClassPath = str_replace (array ($this->projectApiPath, '/', '.php'), array ('', '\\', ''), $apiClassPath);
+                $apiClassPath = strstr ($aFile, $this->apiPath);
+                $apiClassPath = str_replace (array ($this->apiPath, '/', '.php'), array ('', '\\', ''), $apiClassPath);
                 $apiClassPath = ltrim ($apiClassPath, '\\');
                 $menuPos = stripos ($apiClassPath, '\\');
                 if ($menuPos !== false) {
@@ -95,7 +95,7 @@ class EasyApiDoc {
                     $menuGroup = 'No Group';
                 }
                 //class
-                if (empty($this->projectNamespace)) {
+                if (empty($this->namespace)) {
                     $apiClassNameArr = explode ('\\', $apiClassPath);
                     if (empty($apiClassNameArr)) {
                         $apiClassName = $apiClassPath;
@@ -106,7 +106,7 @@ class EasyApiDoc {
                         include ($aFile);
                     }
                 } else {
-                    $apiClassName = $this->projectNamespace . '\\' . $apiClassPath;
+                    $apiClassName = $this->namespace . '\\' . $apiClassPath;
                 }
                 //check the class
                 if (!class_exists ($apiClassName)) {
@@ -251,7 +251,7 @@ class EasyApiDoc {
                     $apiList[$menuGroup]['subList'][] = array (
                         'menuTag'              => $menuTag,
                         'methodTitle'          => $methodTitle,
-                        'methodPath'           => '/' . strtolower (str_replace (array ($this->projectNamespace, '\\'), array ('', '/'), $apiClassPath . '/' . ucfirst ($mValue))),
+                        'methodPath'           => '/' . strtolower (str_replace (array ($this->namespace, '\\'), array ('', '/'), $apiClassPath . '/' . ucfirst ($mValue))),
                         'methodDesc'           => $methodDesc,
                         'methodAuthor'         => $methodAuthor,
                         'methodDate'           => $methodDate,

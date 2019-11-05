@@ -197,7 +197,7 @@
                                         </tbody>
                                     </table>
                                     <div class="ui fluid action input">
-                                        <input placeholder="Request Url" type="text" name="request_url" value="<?php echo rtrim ($this->projectApiBaseUrl, '/') . $menuInfo['methodPath']; ?>">
+                                        <input placeholder="Request Url" type="text" name="request_url" value="<?php echo rtrim ($this->apiBaseUrl, '/') . $menuInfo['methodPath']; ?>">
                                         <button class="ui button green" id="submit">Request Now</button>
                                     </div>
                                     <div class="ui blue message" id="json_output"></div>

@@ -45,7 +45,7 @@ $doc =new \AnyChange\EasyApiDoc\EasyApiDoc();
 $this->setProjectName( 'myproject');
 
 //Set The Basic Access Url For API Testing 
-$this->setProjectApiBaseUrl('http://192.168.1.209/v1');
+$this->setApiBaseUrl('http://192.168.1.209/v1');
 
 //Set The MenuGroup's Self Reflection
 $this->setSelfMenuGroup(array ('my'=> 'My Account'));
@@ -59,10 +59,10 @@ $doc->setSelfMenuStopList ('the end','API Description','Just The End Of The Docu
 
 //basic useage
 //Set The Namespace Of The Project
-$doc->setProjectNamespace('App\Controllers\V1');
+$doc->setNamespace('App\Controllers\V1');
 
 //Set The Source Path Of The API
-$doc->setProjectApiPath(APPPATH . 'Controllers/V1');
+$doc->setApiPath(APPPATH . 'Controllers/V1');
 
 //Show The Document
 $doc->onlineShow ();
