@@ -23,8 +23,10 @@
     <div class="ui floating message">
         <?php if (!empty($errorMessage)) { ?>
             <div class="ui error message">
-                <strong>Error：<?php foreach ($errorMessage as $error) {
-                        echo $error; ?><br><?php } ?></strong>
+                <strong>
+                    Error：<br>
+                    <?php foreach ($errorMessage as $error) {echo $error; ?><br><?php } ?>
+                </strong>
             </div>
         <?php } ?>
         <?php if (!empty($apiList)) { ?>
