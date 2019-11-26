@@ -38,23 +38,23 @@ class EasyApiDoc {
     }
 
     public function setProjectName ($projectName) {
-        $this->projectName = $projectName;
+        $this->projectName = is_string ($projectName)?$projectName:'';
     }
 
     public function setApiBaseUrl ($apiBaseUrl) {
-        $this->apiBaseUrl = $apiBaseUrl;
+        $this->apiBaseUrl = is_string ($apiBaseUrl)?$apiBaseUrl:'';
     }
 
     public function setNamespace ($namespace) {
-        $this->namespace = $namespace;
+        $this->namespace = is_string ($namespace)?$namespace:'';
     }
 
     public function setApiPath ($apiPath) {
-        $this->apiPath = $apiPath;
+        $this->apiPath = is_string ($apiPath)?$apiPath:'';
     }
 
     public function setSelfMenuGroup ($selfMenuGroup) {
-        $this->selfMenuGroup = $selfMenuGroup;
+        $this->selfMenuGroup = is_array ($selfMenuGroup)?$selfMenuGroup:'';
     }
 
     public function setSelfMenuList ($menuGroup, $menuTitle, $methodDesc, $tableTitle = '', $tableList = array (), $menuGroupPosition = 'start') {
@@ -265,21 +265,21 @@ class EasyApiDoc {
                     );
                 }
             }
+
+            $start = array ();
+            $stop = array ();
+            foreach ($this->selfMenuList as $gk => $gv) {
+                if ($gv['menuGroupPosition'] == 'start') {
+                    $start[$gk] = $gv;
+                } else {
+                    $stop[$gk] = $gv;
+                }
+            }
+            $apiList = array_merge ($start, $apiList, $stop);
         } catch (\Exception $e) {
             $errorMessage[] = $e->getMessage ();
         }
-
-        $start = array ();
-        $stop = array ();
-        foreach ($this->selfMenuList as $gk => $gv) {
-            if ($gv['menuGroupPosition'] == 'start') {
-                $start[$gk] = $gv;
-            } else {
-                $stop[$gk] = $gv;
-            }
-        }
-        $apiList = array_merge ($start, $apiList, $stop);
-
+        
         include (dirname (__FILE__) . '/EasyApiDocView.php');
     }
 
